@@ -26,7 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,7 +37,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bm.encryptednoteapp.domian.models.Note
-import com.bm.encryptednoteapp.ui.theme.colorPrimaryDark
 import com.bm.encryptednoteapp.ui.theme.colorSearchIcon
 
 @Composable
@@ -46,13 +45,13 @@ fun Footer(
     id:Int,
     color: Color,
     textColor: Color,
-    AddImage: () -> Unit = {},
-    AddTask: () -> Unit = {},
+    addImage: () -> Unit = {},
+    addTask: () -> Unit = {},
     clearAll: () -> Unit,
-    Save: () -> Unit = {},
+    save: () -> Unit = {},
     pickColor: (Color) -> Unit
 ){
-    var selectedId by remember { mutableStateOf(0) }
+    var selectedId by remember { mutableIntStateOf(0) }
     selectedId = id
     val color2 = MaterialTheme.colorScheme.surfaceVariant
     Column(
@@ -118,23 +117,27 @@ fun Footer(
                 textDecoration = TextDecoration.Underline
             )
         }
-        footerElement(icon = Icons.Outlined.AddAPhoto, text = "Add Image", color = textColor, onClick = AddImage)
-        footerElement(icon= Icons.Outlined.AddTask, text= "Add new Task", color= textColor, onClick = AddTask )
-        footerElement(icon = Icons.Outlined.Clear, text = "Clear All", color = Color.Red.copy(alpha = 0.6f), onClick = clearAll)
-        footerElement(icon = Icons.Outlined.Save, text = "Save", color = colorSearchIcon, onClick = Save)
+        FooterElement(icon = Icons.Outlined.AddAPhoto, text = "Add Image", color = textColor, onClick = addImage)
+        FooterElement(icon= Icons.Outlined.AddTask, text= "Add new Task", color= textColor, onClick = addTask )
+        FooterElement(icon = Icons.Outlined.Clear, text = "Clear All", color = Color.Red.copy(alpha = 0.6f), onClick = clearAll)
+        FooterElement(icon = Icons.Outlined.Save, text = "Save", color = colorSearchIcon, onClick = save)
     }
 }
 
 @Composable
-fun footerElement(
-    modifier: Modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 15.dp, end = 15.dp),
+fun FooterElement(
+    modifier: Modifier = Modifier,
     icon: ImageVector,
     text: String,
     color: Color,
     onClick: () -> Unit
 ) {
     Row(
-        modifier = modifier.fillMaxWidth().clickable(onClick = onClick),
+        modifier = modifier
+            .padding(top = 10.dp, bottom = 10.dp, start = 22.dp, end = 15.dp)
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+        ,
         horizontalArrangement = Arrangement.spacedBy(1.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -146,15 +149,15 @@ fun footerElement(
 
 @Composable
 fun ColorShapeSelection(
-    modifier: Modifier = Modifier
-        .padding(horizontal = 10.dp)
-        .size(25.dp),
+    modifier: Modifier = Modifier,
     color: Color,
     selected: Boolean,
     onclick: () -> Unit
 ) {
     Box(
         modifier
+            .padding(horizontal = 10.dp)
+            .size(25.dp)
             .border(1.dp, color, shape = CircleShape)
             .padding(3.dp)
     )
@@ -184,10 +187,10 @@ fun FooterPreview() {
     Footer(
         color = Color.White,
         textColor = Color.DarkGray,
-        AddImage = {},
-        AddTask = {},
+        addImage = {},
+        addTask = {},
         clearAll = {},
-        Save = {},
+        save = {},
         pickColor = {},
         id= 0
     )

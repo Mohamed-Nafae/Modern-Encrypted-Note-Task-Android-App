@@ -1,5 +1,13 @@
 package com.bm.encryptednoteapp.presentation.mynotes
 
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
+import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
+import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -17,6 +25,8 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.LockOpen
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,13 +42,16 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
+import com.bm.encryptednoteapp.domian.util.BiometricPromptManager
+import com.bm.encryptednoteapp.domian.util.BiometricPromptManager.*
 import com.bm.encryptednoteapp.domian.util.NoteOrder
 import com.bm.encryptednoteapp.domian.util.OrderType
 import com.bm.encryptednoteapp.presentation.mynotes.components.NoteCard
 import com.bm.encryptednoteapp.presentation.mynotes.components.SearchBar
 import com.bm.encryptednoteapp.ui.theme.colorAccent
-import com.bm.encryptednoteapp.ui.theme.colorDelete
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -48,18 +61,89 @@ import java.util.Locale
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: MyNotesViewModel
+    viewModel: MyNotesViewModel,
+    isAuthenticated: Boolean,
+    promptManager: BiometricPromptManager,
+    onAuthSuccess: () -> Unit
 ) {
+
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
+
+    val biometricResult by promptManager.promptResult.collectAsState(null)
+
     val focusManager = LocalFocusManager.current
     val state = viewModel.state.value
     val isSystemDark = isSystemInDarkTheme()
     val isDarkTheme by remember { mutableStateOf(isSystemDark) }
     val sdf = remember { SimpleDateFormat("EEE d, MMM", Locale.getDefault()) }
 
+    val enrollLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = {
+            println("Activity result: $it")
+        }
+    )
+
+    LaunchedEffect(biometricResult) {
+        biometricResult?.let {
+            when (it) {
+
+                is BiometricResult.AuthenticationError -> {
+                    snackBarHostState.showSnackbar("Authentication Error: ${it.error}")
+                }
+
+                BiometricResult.AuthenticationFailed -> {
+                    snackBarHostState.showSnackbar("Authentication Failed")
+                }
+
+                BiometricResult.AuthenticationNotSet -> {
+                    onAuthSuccess()
+                    state.selectedNote?.let { note ->
+                        viewModel.onEvent(HomeScreenEvents.ToggleEncryption(note))
+                    }
+                    val result = snackBarHostState.showSnackbar(
+                        message = "Authentication not set, for security purposes, please: ",
+                        actionLabel = "set it",
+                        duration = SnackbarDuration.Short
+                    )
+                    if (result == SnackbarResult.ActionPerformed)
+                        if (Build.VERSION.SDK_INT >= 30) {
+                            val enrollIntent = Intent(Settings.ACTION_BIOMETRIC_ENROLL).apply {
+                                putExtra(
+                                    Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
+                                    BIOMETRIC_STRONG or DEVICE_CREDENTIAL
+                                )
+                            }
+                            enrollLauncher.launch(enrollIntent)
+                        }
+                }
+
+                BiometricResult.AuthenticationSucceeded -> {
+                    onAuthSuccess()
+                    state.selectedNote?.let { note ->
+                        viewModel.onEvent(HomeScreenEvents.ToggleEncryption(note))
+                    }
+                    snackBarHostState.showSnackbar("Authentication Succeeded")
+                }
+
+                BiometricResult.FeatureUnavailable -> {
+                    snackBarHostState.showSnackbar("Feature Unavailable")
+                }
+
+                BiometricResult.HardwareUnavailable -> {
+                    snackBarHostState.showSnackbar("Hardware Unavailable")
+                }
+            }
+        }
+    }
+
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackBarHostState
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier
@@ -243,7 +327,14 @@ fun HomeScreen(
                     IconButton(
                         onClick = {
                             state.selectedNote?.let { note ->
-                                viewModel.onEvent(HomeScreenEvents.ToggleEncryption(note))
+                                if (note.note.isEncrypted && !isAuthenticated) {
+                                    promptManager.showBiometricPrompt(
+                                        "Authenticate",
+                                        "Confirm your identity to change encryption"
+                                    )
+                                } else {
+                                    viewModel.onEvent(HomeScreenEvents.ToggleEncryption(note))
+                                }
                             }
                         },
                         modifier = Modifier
@@ -266,8 +357,7 @@ fun HomeScreen(
                                 text = if (state.selectedNote?.note?.isEncrypted == true)
                                     "Encrypted"
                                 else
-                                    "Decrypted"
-                                ,
+                                    "Decrypted",
                                 style = MaterialTheme.typography.bodySmall
                             )
                         }
@@ -323,7 +413,11 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(top = 16.dp, start = 8.dp, end = 8.dp)
-                .clickable { focusManager.clearFocus() }
+                .clickable(
+                    interactionSource = null,
+                    indication = null
+                ) { focusManager.clearFocus() }
+
         ) {
 
             // Header

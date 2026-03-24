@@ -15,7 +15,7 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = colorPrimaryDark,
-    background = colorWhite,
+    background = enhancedColorWhite,
     onBackground = colorSubBackgroundLight,
     secondary = colorTextSubtitleL
 

@@ -62,16 +62,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.bm.encryptednoteapp.domian.models.Note
 import com.bm.encryptednoteapp.domian.models.NoteTag
 import com.bm.encryptednoteapp.presentation.editaddnote.components.Footer
 import com.bm.encryptednoteapp.ui.theme.colorAccent
-import com.bm.encryptednoteapp.ui.theme.colorNoteColor2
 import com.bm.encryptednoteapp.ui.theme.colorNoteColor3
 import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
@@ -87,7 +84,7 @@ fun EditAddNoteScreen(
 
     val note = viewModel.state.value.noteWithTasks.note
     val tasks = viewModel.state.value.noteWithTasks.tasks
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
 
     var isTagMenuExpanded by remember { mutableStateOf(false) }
     var taskText by remember { mutableStateOf(Pair<String, Int>("", -1)) }
@@ -120,7 +117,7 @@ fun EditAddNoteScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is EditAddNotesViewModel.UiEvent.ShowSnackBar -> {
-                    snackbarHostState.showSnackbar(
+                    snackBarHostState.showSnackbar(
                         message = event.message
                     )
                 }
@@ -129,7 +126,6 @@ fun EditAddNoteScreen(
                     onBackClick()
                 }
 
-                else -> throw IllegalStateException("Unknown NoteOrder type")
             }
         }
     }
@@ -273,7 +269,7 @@ fun EditAddNoteScreen(
                 })
             },
         snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
+            SnackbarHost(hostState = snackBarHostState)
         },
         topBar = {
             Row(
@@ -294,16 +290,16 @@ fun EditAddNoteScreen(
             }
         }, bottomBar = {
             Footer(
-                color = MaterialTheme.colorScheme.background.copy(0.9f),
+                color = MaterialTheme.colorScheme.background,
                 textColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 id = Note.noteColors.indexOf(Color(note.color)),
-                AddImage = {
+                addImage = {
                     focusManager.clearFocus()
                     photoPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
                 },
-                AddTask = {
+                addTask = {
                     viewModel.isTaskDialogVisible.value = true
                     isNewTask = true
                     focusManager.clearFocus()
@@ -312,7 +308,7 @@ fun EditAddNoteScreen(
                     viewModel.isClearAllDialogVisible.value = true
                     focusManager.clearFocus()
                 },
-                Save = {
+                save = {
                     viewModel.saveDialogVisible.value = true
                     focusManager.clearFocus()
                 },
@@ -497,7 +493,7 @@ fun EditAddNoteScreen(
                         .background(MaterialTheme.colorScheme.surfaceVariant),
                     expanded = isTagMenuExpanded,
                     onDismissRequest = { isTagMenuExpanded = false },
-                    offset = DpOffset(-10.dp, 6.dp),
+                    offset = DpOffset((-10).dp, 6.dp),
                     shadowElevation = 0.dp,
                     tonalElevation = 0.dp
                 ) {
@@ -610,11 +606,4 @@ fun TaskRowEdit(
             )
         }
     }
-}
-
-
-@Preview
-@Composable
-fun test() {
-    //EditAddNoteScreen() { }
 }

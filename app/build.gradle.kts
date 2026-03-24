@@ -90,6 +90,9 @@ dependencies {
     kapt(libs.hilt.android.compiler)
 
     // Image handler dependency coil
-    implementation("io.coil-kt.coil3:coil-compose:3.4.0")
+    implementation(libs.coil.compose)
+
+    // android authentication library
+    implementation(libs.androidx.biometric)
 
 }
