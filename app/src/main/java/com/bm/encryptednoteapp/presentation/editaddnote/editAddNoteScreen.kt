@@ -485,7 +485,7 @@ fun EditAddNoteScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(Modifier.weight(1f))
-                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Tag")
+                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Tag", tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.8f))
                 }
                 DropdownMenu(
                     modifier = Modifier

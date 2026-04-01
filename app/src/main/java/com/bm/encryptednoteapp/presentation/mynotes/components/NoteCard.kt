@@ -22,6 +22,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,7 +45,8 @@ fun NoteCard(
     doneColor: Color = colorAccent,
     tag: String,
     title: String,
-    description: String = "",
+    subtitle: String = "",
+    description: String,
     creatingDate: String,
     height: Dp,
     tasks: List<Pair<String, Boolean>> = emptyList(),
@@ -115,6 +118,17 @@ fun NoteCard(
                     )
                 )
 
+                if(subtitle.isNotBlank() && imagePath == null) {
+                    Text(
+                        modifier = Modifier.padding(start = 15.dp),
+                        text = description,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontStyle = FontStyle.Italic),
+                        color = contentColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
                 // Description (optional)
                 if (description.isNotBlank()) {
                     Spacer(modifier = Modifier.height(6.dp))
@@ -122,7 +136,7 @@ fun NoteCard(
                         text = description,
                         style = MaterialTheme.typography.bodyMedium,
                         color = contentColor,
-                        maxLines = if (tasks.isNotEmpty()) 3 else 7,
+                        maxLines = if (tasks.isNotEmpty() && imagePath != null) 3 else 7,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
@@ -252,6 +266,7 @@ fun NoteCardPreview() {
         Surface(Modifier.fillMaxWidth()) {
             NoteCard(
                 title = "Today Tasks",
+                subtitle = "Quick tasks to get done ",
                 description = "Quick tasks to get done",
                 creatingDate = "Sun, 2 Apr",
                 tasks = listOf(

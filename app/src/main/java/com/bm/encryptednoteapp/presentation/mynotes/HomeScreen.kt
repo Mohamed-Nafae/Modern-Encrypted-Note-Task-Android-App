@@ -17,7 +17,13 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.LockOpen
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.icons.outlined.DeleteOutline
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.EditNote
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Lock
@@ -207,12 +213,12 @@ fun HomeScreen(
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Icon(
-                                    Icons.Outlined.FilterList,
+                                    Icons.Default.Sort,
                                     contentDescription = "Filter Notes",
                                     modifier = Modifier.size(30.dp)
                                 )
                                 Text(
-                                    text = "Order", style = MaterialTheme.typography.bodySmall
+                                    text = "Order", style = MaterialTheme.typography.labelSmall
                                 )
                             }
                         }
@@ -313,11 +319,11 @@ fun HomeScreen(
                     ) {
                         Column {
                             Icon(
-                                Icons.Outlined.EditNote,
-                                contentDescription = "Edit Notes",
+                                Icons.Default.Edit,
+                                contentDescription = "Edit",
                                 modifier = Modifier.size(30.dp)
                             )
-                            Text(text = "Edit", style = MaterialTheme.typography.bodySmall)
+                            Text(text = "Edit", style = MaterialTheme.typography.labelSmall)
                         }
                     }
                     Spacer(modifier = Modifier.width(2.dp))
@@ -355,7 +361,7 @@ fun HomeScreen(
                                     "Encrypted"
                                 else
                                     "Decrypted",
-                                style = MaterialTheme.typography.bodySmall
+                                style = MaterialTheme.typography.labelSmall
                             )
                         }
                     }
@@ -386,17 +392,14 @@ fun HomeScreen(
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Icon(
-                                Icons.Outlined.DeleteOutline,
+                                Icons.Default.Delete,
                                 contentDescription = "Delete",
-                                tint = Color.Red.copy(
-                                    alpha = 0.8f, blue = 0.2f, green = 0.2f, red = 0.9f
-                                ),
+                                tint = Color.Red.copy(alpha = 0.7f),
                                 modifier = Modifier.size(30.dp)
                             )
                             Text(
-                                text = "Delete", color = Color.Red.copy(
-                                    alpha = 0.8f, blue = 0.2f, green = 0.2f, red = 0.9f
-                                ), style = MaterialTheme.typography.bodySmall
+                                text = "Delete", color = Color.Red
+                                , style = MaterialTheme.typography.labelSmall
                             )
                         }
                     }

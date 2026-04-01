@@ -12,5 +12,5 @@ val colorDefaultNoteColor = Color(0xFF333333)
 val colorNoteColor3 = Color(0xFFD73835)
 val colorSubBackgroundLight = Color(0xFFEBEBEB)
 val enhancedColorWhite = Color(0xFFEFEFEF)
-
+val Icon_Color = Color(0xFF0E4774)
 
