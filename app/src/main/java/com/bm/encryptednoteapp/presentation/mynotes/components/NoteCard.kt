@@ -112,10 +112,12 @@ fun NoteCard(
                 // Title
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleLarge.copy(
+                    style = MaterialTheme.typography.titleMedium.copy(
                         color = titleColor,
                         fontWeight = FontWeight.Bold
-                    )
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 if(subtitle.isNotBlank() && imagePath == null) {
@@ -136,7 +138,7 @@ fun NoteCard(
                         text = description,
                         style = MaterialTheme.typography.bodyMedium,
                         color = contentColor,
-                        maxLines = if (tasks.isNotEmpty() && imagePath != null) 3 else 7,
+                        maxLines = if (tasks.isNotEmpty() || imagePath != null) 3 else 7,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
@@ -221,7 +223,8 @@ fun NoteCardFooter(
     Row(
         modifier = Modifier
             .positionAsFooter()
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .heightIn(min=30.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -231,7 +234,8 @@ fun NoteCardFooter(
                 containerColor = Color.Transparent,
                 contentColor = contentColor
             ),
-            border = BorderStroke(1.dp, contentColor.copy(alpha = 0.5f))
+            border = BorderStroke(1.dp, contentColor.copy(alpha = 0.5f)),
+            modifier = Modifier.heightIn(min = 20.dp)
         ) {
             Text(
                 text = tag,

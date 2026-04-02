@@ -450,7 +450,8 @@ fun HomeScreen(
                     val formattedDate = sdf.format(Date(noteWithTasks.note.createdAt))
                     NoteCard(
                         title = noteWithTasks.note.title,
-                        description = noteWithTasks.note.subtitle,
+                        subtitle = noteWithTasks.note.subtitle,
+                        description = noteWithTasks.note.content,
                         creatingDate = formattedDate,
                         tasks = noteWithTasks.tasks.map {
                             it.description to it.isDone
