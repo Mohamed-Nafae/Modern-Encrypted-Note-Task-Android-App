@@ -51,10 +51,12 @@ CipherNote is built using modern Android development practices and libraries to 
 
 ## 📸 Screenshots
 
-| Onboarding & Security | Home Screen (Light & Dark) | Note Creation & Tasks |
+| First screen | Next screen | The Next One |
 |:---:|:---:|:---:|
-| <img src="screenshots/onboarding.png" width="250"/> | <img src="screenshots/home_light.png" width="250"/> | <img src="screenshots/note_edit_light.png" width="250"/> |
-| <img src="screenshots/biometric.png" width="250"/> | <img src="screenshots/home_dark.png" width="250"/> | <img src="screenshots/note_edit_dark.png" width="250"/> |
+| ![onboarding](screenshots/onboarding.jpg) | ![onboarding1](screenshots/onboarding1.jpg) | ![onboarding3](screenshots/onboarding3.jpg) |
+| ![onboarding3](screenshots/onboarding3.jpg) | ![home1W](screenshots/home1W.jpg) | ![home2W](screenshots/home2W.jpg) |
+| ![home3W](screenshots/home3W.jpg) | ![Edit1W](screenshots/Edit1W.jpg) | ![Edit2W](screenshots/Edit2W.jpg) |
+| ![home2B](screenshots/home2B.jpg) | ![home1B](screenshots/home1B.jpg) | ![Edit1B](screenshots/Edit1B.jpg) |
 
 
 ## 🚀 Getting Started
