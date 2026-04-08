@@ -9,7 +9,7 @@ Welcome to **CipherNote**, the ultimate Modern Encrypted Note & Task Manager des
 
 In a world where privacy is increasingly compromised, CipherNote provides a secure sanctuary for your personal thoughts, important tasks, and sensitive information. Built with a beautiful, modern interface, it combines powerful productivity tools with industry-standard, military-grade encryption. Your data stays on your device, and only you hold the key.
 
-<a href="YOUR_PLAY_STORE_LINK_HERE">
+<a href="https://play.google.com/store/apps/details?id=com.bm.encryptednoteapp">
   <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="70"/>
 </a>
 
